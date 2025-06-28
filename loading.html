@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>正在跳转...</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at center, #e6ecf5, #dee5ee);
+      font-family: "Segoe UI", "PingFang SC", "Helvetica Neue", sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #444;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container">
+    <div id="lottie-loading" style="width: 160px; height: 160px;"></div>
+    <div class="loading-text">正在进入系统，请稍候...</div>
+  </div>
+
+  <!-- Lottie 脚本 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.1/lottie.min.js"></script>
+  <script>
+    const animation = lottie.loadAnimation({
+      container: document.getElementById('lottie-loading'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'assets/animations/loading.json' // 请根据实际路径修改
+    });
+
+    setTimeout(() => {
+      window.location.href = 'http://localhost:9878/#/login';
+    }, 4000);
+  </script>
+</body>
+</html>

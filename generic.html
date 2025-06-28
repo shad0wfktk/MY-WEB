@@ -1,0 +1,250 @@
+<!DOCTYPE HTML> 
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Generic Page - Massively by HTML5 UP</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    #map {
+      width: 100%;
+      height: 800px;
+    }
+   
+    .custom-popup .desc {
+      font-size: 14px;
+      color: #333;
+    }
+	.custom-popup img {
+  width: 200px;
+  height: 160px;
+  object-fit: cover;     /* 保证图片裁剪填满不变形 */
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+  </style>
+</head>
+<body class="is-preload">
+  <div id="wrapper">
+    <header id="header">
+      <a href="index.html" class="logo">Massively</a>
+    </header>
+
+    <nav id="nav">
+      <ul class="links">
+        <li><a href="index.html">自我介绍</a></li>
+        <li class="active"><a href="generic.html">聚餐小记</a></li>
+        <li><a href="elements.html">旅程心得</a></li>
+      </ul>
+    </nav>
+
+    <div id="main" style="background-color: #f5f5f54a; padding: 20px;">
+      <div id="map"></div>
+    </div>
+
+    <footer id="footer" style="background-color: #f5f5f54a; padding: 2em 0; color: black; border-top: 1px solid #070707;">
+      <section class="pagination" style="text-align: center; margin-bottom: 1em;">
+        <a href="elements.html" class="next" style="display: inline-block; padding: 0.5em 1.5em; background-color: transparent; color: white; border: 2px solid rgb(2, 2, 2); border-radius: 5px; text-decoration: none; font-weight: bold; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
+          Next
+        </a>
+      </section>
+      <section class="contact-info" style="text-align: center;">
+        <p style="font-size: 1.1em; color: white;">如果有任何问题，请及时与我们联系</p>
+        <p><strong style="color: white;">Email：</strong> <a href="mailto:2813601739@qq.com" style="color: white; text-decoration: none;">2813601739@qq.com</a></p>
+        <p><strong style="color: white;">GitHub：</strong> <a href="https://github.com/shad0wfktk" target="_blank" style="color: white; text-decoration: none;"><i class="fab fa-github fa-lg" style="margin-left: 5px;"></i></a></p>
+      </section>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([30.5290, 114.3642], 15);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a>, &copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    const customIcon = L.icon({
+      iconUrl: 'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers/img/marker-icon-red.png',
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    const DEFAULT_IMG = 'https://dummyimage.com/300x200/87ceeb/ffffff&text=POI';
+
+    let clickedLatLng = null;
+    map.on('click', function(e) {
+      clickedLatLng = e.latlng;
+      document.getElementById('inputName').value = '';
+      document.getElementById('inputDesc').value = '';
+      document.getElementById('inputModal').style.display = 'block';
+    });
+
+    function closeModal() {
+      document.getElementById('inputModal').style.display = 'none';
+    }
+
+    function submitPOI() {
+      const name = document.getElementById('inputName').value.trim();
+      const desc = document.getElementById('inputDesc').value.trim();
+      const latlng = clickedLatLng;
+
+      if (!name || !desc || !latlng) {
+        alert("请完整填写名称和描述！");
+        return;
+      }
+
+      const popupContent = `
+        <div class="custom-popup">
+          <img src="${DEFAULT_IMG}" alt="默认图片" />
+          <div class="desc">
+            <strong>${name}</strong><br/>
+            坐标: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}<br/>
+            ${desc}
+          </div>
+        </div>
+      `;
+
+      L.marker(latlng, { icon: customIcon })
+        .addTo(map)
+        .bindPopup(popupContent)
+        .openPopup();
+
+      closeModal();
+    }
+
+    const pois = [
+      {
+        lat: 30.5286,
+        lng: 114.3510,
+        name: "银泰创意城",
+        description: "2025/06/28  下课爽吃漂亮饭",
+        image: "images/dishes1.jpg"
+      },
+      { 
+        lat: 30.52583, 
+        lng: 114.35830,
+        name: "麦当劳",
+        description: "2025/05/15  信息学部第五食堂",
+        image: "images/dishes2.jpg"
+      }, 
+      { 
+        lat: 30.54058,
+        lng: 114.35367,
+        name: "桂园食堂",
+        description: "2025/04/27  实验课后的小聚",
+        image: "images/dishes3.jpg"
+      }, 
+      { 
+        lat: 30.53025,
+        lng: 114.35463,
+        name: "信息学部CBD",
+        description: "日常小聚",
+        image: "images/dishes4.jpg"
+      }, 
+    ];
+
+    pois.forEach(poi => {
+      const marker = L.marker([poi.lat, poi.lng], {icon: customIcon}).addTo(map);
+      const popupContent = `
+        <div class="custom-popup">
+          <img src="${poi.image}" alt="${poi.name}" />
+          <div class="desc">
+            <strong>${poi.name}</strong><br/>
+            ${poi.description}
+          </div>
+        </div>`;
+      marker.bindPopup(popupContent);
+    });
+  </script>
+
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/jquery.scrollex.min.js"></script>
+  <script src="assets/js/jquery.scrolly.min.js"></script>
+  <script src="assets/js/browser.min.js"></script>
+  <script src="assets/js/breakpoints.min.js"></script>
+  <script src="assets/js/util.js"></script>
+  <script src="assets/js/main.js"></script>
+
+  <!-- 输入弹窗 -->
+  <div id="inputModal" style="
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffffee;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+">
+  <h2 style="margin-top: 0; margin-bottom: 20px; text-align: center; color: #758794;">添加标记点</h2>
+
+  <label style="display: block; margin-bottom: 10px;">
+    名称：
+    <input type="text" id="inputName" style="
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+    " />
+  </label>
+
+  <label style="display: block; margin-bottom: 20px;">
+    描述：
+    <textarea id="inputDesc" rows="4" style="
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      box-sizing: border-box;
+      resize: vertical;
+    "></textarea>
+  </label>
+
+  <div style="text-align: right;">
+    <button onclick="submitPOI()" style="
+      background-color: #ccc;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-right: 10px;
+    ">提交</button>
+
+    <button onclick="closeModal()" style="
+      background-color: #ccc;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+    ">取消</button>
+  </div>
+</div>
+
+</body>
+</html>
